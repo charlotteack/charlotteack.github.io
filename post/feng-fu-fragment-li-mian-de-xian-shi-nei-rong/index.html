@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>charlotteack&#39;s home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+    <link rel="stylesheet" href="/media/css/post.css">
+    <link rel="stylesheet" href="/media/live2d/css/live2d.css" />
+    
+</head>
+<body class=" mdui-appbar-with-toolbar  mdui-theme-primary-pink mdui-theme-accent-pink">
+<header class="mdui-toolbar mdui-color-pink mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide" style="z-index: 1000">
+    <a href="javascript:;" mdui-drawer="{target: '#left-drawer',overlay:true}" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
+    <span class="mdui-typo-title">charlotteack&#39;s home</span>
+    <div class="mdui-toolbar-spacer"></div>
+<!--    <a href="javascript:history.go(0);" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">more_vert</i></a>
+</header>
+
+<div class="mdui-drawer mdui-color-white mdui-drawer-full-height mdui-drawer-close" id="left-drawer">
+    <ul class="mdui-list">
+        <li class="mdui-subheader">菜单</li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/" class="mdui-list-item-content">首页</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/archives" class="mdui-list-item-content">归档</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/tags" class="mdui-list-item-content">标签</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/post/about" class="mdui-list-item-content">关于</a>
+        </li>
+        
+    </ul>
+</div>
+
+<div id="content" class="site-content">
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+            <article id="post-1270" class="post-1270 post type-post status-publish format-standard hentry category-90 category-129 tag-149">
+                <header class="entry-header">
+                    <h1 class="entry-title">丰富fragment里面的显示内容</h1>
+                    <p class="entry-census">发布于 2020-03-25</p>
+                    <hr>
+                </header>
+                <div class="neko">
+                    <h3 id="前言">前言：</h3>
+<p>继前面实现简单的tabbar切换fragment后，这次就使用RecyclerView来丰富里面address这个tab的内容。另外这次写博客就边做边写，可能会更真实一点。</p>
+<h3 id="整体思路">整体思路：</h3>
+<p>主活动是控制每个tab的切换的，与其显示的内容无关。故这次是与主活动无关的，想要展示出RecyclerView的列表效果，只需修改对应xml里面的内容即可（就我这里来说是address.xml）。之后这个xml会被压缩成fragment，所以还需要在fragment里面将需要展示的数据通过适配器放到RecyclerView。</p>
+<h3 id="实现">实现：</h3>
+<ul>
+<li><strong>修改xml文件展示内容</strong><br>
+这个就先把之前的TextView注释掉，换成RecyclerView即可，比较简单，直接贴代码：</li>
+</ul>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:orientation=&quot;vertical&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:id=&quot;@+id/addr_content&quot;&gt;
+
+
+&lt;!--    &lt;TextView--&gt;
+&lt;!--        android:id=&quot;@+id/addr_content_text&quot;--&gt;
+&lt;!--        android:layout_width=&quot;match_parent&quot;--&gt;
+&lt;!--        android:layout_height=&quot;wrap_content&quot;--&gt;
+&lt;!--        android:text=&quot;@string/address_info&quot;--&gt;
+&lt;!--        android:gravity=&quot;center&quot;--&gt;
+&lt;!--        android:textSize=&quot;24sp&quot;/&gt;--&gt;
+
+
+    &lt;android.support.v7.widget.RecyclerView
+        android:id=&quot;@+id/recycler_view&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<ul>
+<li><strong>创建RecyclerView展示的行</strong><br>
+这里我想展示名侦探柯南里面的图片和一些文字内容，故创建一个person_item.xml，里面放一个ImageView和一个TextView即可，代码如下：</li>
+</ul>
+<pre><code>   &lt;ImageView
+       android:id=&quot;@+id/person_img&quot;
+       android:layout_width=&quot;wrap_content&quot;
+       android:layout_height=&quot;wrap_content&quot;
+       android:contentDescription=&quot;@string/address_img&quot;
+       android:src=&quot;@drawable/kelan&quot; /&gt;
+
+   &lt;TextView
+       android:id=&quot;@+id/person_description&quot;
+       android:layout_width=&quot;wrap_content&quot;
+       android:layout_height=&quot;wrap_content&quot;
+       android:text=&quot;@string/address_img_info&quot; /&gt;
+
+</code></pre>
+<ul>
+<li><strong>创建person实体类</strong><br>
+因为展示的内容是一张任务图片以及文字，所以创建一个Person实体类来组织这个数据结构比较好。代码如下：</li>
+</ul>
+<pre><code>package com.example.basic_weixin;
+
+public class Person {
+   private int imgID;
+   private String description;
+
+   public Person(int imgID, String description) {
+       this.imgID = imgID;
+       this.description = description;
+   }
+
+   public int getImgID() {
+       return this.imgID;
+   }
+
+   public String getDescription() {
+       return this.description;
+   }
+}
+</code></pre>
+<ul>
+<li><strong>创建Person类的适配器PersonAdapter类</strong><br>
+这种适配器需要继承RecyclerView.Adapter，每个适配器还需要一个ViewHolder内部类，它是决定所展示的形式的（比如我这里是一张图片和一些文字），对应的构造函数就是获取到person_item.xml里面的两个控件即可。光有展示的形式还不行，里面的控件必须还要有对应的内容呀，这里就是要用到onBindViewHolder这个方法了，这个方法可以把Person列表里面的每一个Person里面的内容取出来，然后赋值给每行的控件。至于数据是哪里来的，那当然是PersonAdapter创建的时候，由外面传进来的啦。<br>
+最后还有个getItemCount方法，可以得到列表的数量，但我这里没怎么用到，就不多说了，代码如下：</li>
+</ul>
+<pre><code>package com.example.basic_weixin;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.List;
+
+public class PersonAdapter extends RecyclerView.Adapter&lt;PersonAdapter.ViewHolder&gt; {
+    private List&lt;Person&gt; mPersonList;
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView personImg;
+        TextView personDescription;
+        public ViewHolder(View view) {
+            super(view);
+            personImg = view.findViewById(R.id.person_img);
+            personDescription = view.findViewById(R.id.person_description);
+        }
+    }
+
+    public PersonAdapter(List&lt;Person&gt; personList) {
+        this.mPersonList = personList;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.person_item, viewGroup, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        Person person = mPersonList.get(i);
+        viewHolder.personImg.setImageResource(person.getImgID());
+        viewHolder.personDescription.setText(person.getDescription());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mPersonList.size();
+    }
+}
+
+</code></pre>
+<ul>
+<li><strong>初始化RecyclerView</strong><br>
+由于展示的内容实在AddressFragment里面，让我们视线来到这里。里面只有一个构造函数和一个创建视图的回调函数。很明显，我们要加的内容是放在这个回调函数里面的。</li>
+</ul>
+<p>在之前里面只是简单的写死的一个TextView的时候，代码是这样的：</p>
+<pre><code>public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+      return  inflater.inflate(R.layout.address, container, false);
+    }
+</code></pre>
+<p>可以说基本没有什么实质性内容，所以在这里我们总体需要做的事情就是创建一个数据源，也就是Person类的列表，然后就是通过适配器把数据放到RecyclerView里面来进行展示即可。</p>
+<p>创建数据列表比较简单，无需多说，直接上代码：</p>
+<pre><code>private void initPerson() {
+        Person kelan1 = new Person(R.drawable.kelan, &quot;柯南1号来了&quot;);
+        Person kelan2 = new Person(R.drawable.kelan2, &quot;柯南2号来了&quot;);
+        Person kelan3 = new Person(R.drawable.kelan3, &quot;柯南1号来了&quot;);
+        Person xiaoai1 = new Person(R.drawable.xiaoai, &quot;小哀1号来了&quot;);
+        Person xiaoai2 = new Person(R.drawable.xiaoai2, &quot;小哀2号来了&quot;);
+        personList.add(kelan1);
+        personList.add(kelan2);
+        personList.add(kelan3);
+        personList.add(xiaoai1);
+        personList.add(xiaoai2);
+    }
+</code></pre>
+<p>然后就需要利用适配器装数据了。按照一般套路，这里首先应该获取到RecyclerView对应的控件，然后设置其布局方式，最后通过适配器把数据传进去即可。但是写着写着发现一个问题，findViewById方法好像不能直接使用！！通过观察发现下面的回调函数里面有一个ViewGroup，于是我就想着多加了一个形参view，让它来调用，代码如下。</p>
+<pre><code>public void initRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        PersonAdapter adapter = new PersonAdapter(personList);
+        recyclerView.setAdapter(adapter);
+    }
+</code></pre>
+<p>到这里可以说已经万事俱备，只欠东风了，最后只需在刚刚说的那个回调函数里面，使用刚刚写的这两个方法即可，问题的关键还是initRecyclerView，不确定是否能将ViewGroup类型的参数传进去，也不知道是不是应该这么传，先试一试吧，代码如下：</p>
+<pre><code>@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        initPerson();
+        initRecyclerView(container);
+        return  inflater.inflate(R.layout.address, container, false);;
+    }
+</code></pre>
+<p>果不其然，运行报错了。通过查看logcat发现是类似空指针的错误。这里我首先想到的是适配器里面的赋值除了问题，于是开始了与适配器的爱恨情仇，折腾一阵子后发现无论是按某些网友的帖子上面的写法，还是按官方的写法都解决不了。这样一来，就多半是这个initRecyclerView(container)传参的问题了。</p>
+<p>说过来说过去还是基础不扎实，安卓底层的一些东西没弄清楚，才会导致这样。后来到网上查阅发现是将整个inflator传进去，修改后的代码如下：</p>
+<pre><code>@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.address, container, false);
+        initPerson();
+        initRecyclerView(view);
+        return view;
+    }
+</code></pre>
+<h3 id="运行结果"><strong>运行结果</strong></h3>
+<p><img src="https://charlotteack.github.io/post-images/1585546333573.jpg" alt="" loading="lazy"><br>
+结果时出来了，但是为什么只有一行？？？<br>
+我以为又是哪里写错了，结果找了半天没发现啥错。。。之后无意中滑动了鼠标，发现：？？？<br>
+<img src="https://charlotteack.github.io/post-images/1585546345188.jpg" alt="" loading="lazy"><br>
+此时心情不知道怎么表达，在此省略🙃</p>
+<p>但这这样也是有问题的，后来度娘告诉我，是因为person_item线性布局文件整体应该是wrap_content的，代码如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    android:layout_width=&quot;wrap_content&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+
+    &lt;ImageView
+        android:id=&quot;@+id/person_img&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:contentDescription=&quot;@string/address_img&quot;
+        android:src=&quot;@drawable/kelan&quot; /&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/person_description&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;@string/address_img_info&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>修改后的运行结果：<br>
+<img src="https://charlotteack.github.io/post-images/1585546369754.jpg" alt="" loading="lazy"></p>
+<p>至此，RecyclerView基本的使用已经没啥问题了，下面我尝试下瀑布流的布局。</p>
+<h2 id="瀑布流">瀑布流</h2>
+<p>瀑布流效果也不难，只需在上面的基础上加一点点东西即可。流程如下：</p>
+<ul>
+<li><strong>修改布局方式</strong><br>
+之前初始化recyclerview的时候设置的布局为线性布局，现在需要改成瀑布流，代码如下：</li>
+</ul>
+<pre><code>    public void initRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        PersonAdapter adapter = new PersonAdapter(personList);
+        recyclerView.setAdapter(adapter);
+    }
+</code></pre>
+<p>StaggeredGridLayoutManager里面第一个参数代表瀑布流的列数，第二个是方向。</p>
+<ul>
+<li><strong>添加瀑布效果</strong><br>
+由于图片我刚好找的大小都是一样的，不太好展示出“参差不齐”的美感，所以这里使用一个小技巧，将文字的长度设置成不一样来达到效果，具体方法是生成一个1-10的随机数来表示文字重复的次数，代码如下：</li>
+</ul>
+<pre><code>   //将文字描述长度变成不一样，实现瀑布视觉效果
+    private String getRandomLengthName(String s) {
+        Random random = new Random();
+        int length = random.nextInt(10)+1;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0;i &lt; length; i++) {
+            builder.append(s);
+        }
+        return builder.toString();
+    }
+</code></pre>
+<ul>
+<li>运行结果<br>
+<img src="https://charlotteack.github.io/post-images/1585548456314.jpg" alt="" loading="lazy"><br>
+不过有一说一，瀑布流之后的效果还不错，但主要还是我小哀比较美吧😋</li>
+</ul>
+<p>这次博客就写到这里~</p>
+<p>忘了加github地址了，现在补上</p>
+<h5 id="github地址">github地址</h5>
+<p><a href="https://github.com/charlotteack/Android_tabbar">丰富fragment显示内容</a></p>
+
+                </div>
+            </article>
+        </main>
+    </div>
+    <div class="doc-footer-nav mdui-color-theme">
+        <div class="mdui-container">
+            <div class="mdui-row">
+                
+                <a href="https://charlotteack.github.io/post/an-zhuo-guang-bo-xiao-lian-xi/" class="mdui-ripple mdui-color-theme mdui-col-xs-2 mdui-col-sm-6 doc-footer-nav-left">
+                    <div class="doc-footer-nav-text">
+                        <i class="mdui-icon material-icons">arrow_back</i>
+                        <span class="doc-footer-nav-direction mdui-hidden-xs-down">上一篇文章</span>
+                        <div class="doc-footer-nav-chapter mdui-hidden-xs-down">安卓广播小练习</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://charlotteack.github.io/post/shi-yong-fragment-shi-xian-ye-mian-qie-huan/" class="mdui-ripple mdui-color-theme mdui-col-xs-10 mdui-col-sm-6 doc-footer-nav-right">
+                    <div class="doc-footer-nav-text">
+                        <i class="mdui-icon material-icons">arrow_forward</i>
+                        <span class="doc-footer-nav-direction">下一篇文章</span>
+                        <div class="doc-footer-nav-chapter">使用fragment实现页面切换</div>
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <div class="comment"></div>
+</div>
+<footer class="mdui-container footer ">
+    <div class="head_card-offset"></div>
+    <div class="mdui-row mdui-row-gapless">
+        <div class="k-container">
+            <img width="100%" src="/media/img/skirt.png">
+        </div>
+    </div>
+
+    <div class="site-info">
+         <div class="site-info">
+        <div class="footertext"> 
+            <p>Copyright © 2020 - 2021 | <a href="https://huzixu.xyz/">charlotteack</a></p> 
+        </div> 
+        <div class="footer-device"> 
+            <a href="http://www.beian.miit.gov.cn" target="_Blank"> 鄂ICP备20003613号</a> 
+        </div>
+    </div>
+    </div>
+</footer>
+<div id="landlord" style="left:5px;bottom:0px;">
+    <div class="message" style="opacity:0"></div>
+    <canvas id="live2d" width="500" height="560" class="live2d"></canvas>
+    <div class="live_talk_input_body">
+        <div class="live_talk_input_name_body">
+            <input name="name" type="text" class="live_talk_name white_input" id="AIuserName" autocomplete="off" placeholder="你的名字" />
+        </div>
+        <div class="live_talk_input_text_body">
+            <input name="talk" type="text" class="live_talk_talk white_input" id="AIuserText" autocomplete="off" placeholder="要和我聊什么呀？"/>
+            <button type="button" class="live_talk_send_btn" id="talk_send">发送</button>
+        </div>
+    </div>
+    <input name="live_talk" id="live_talk" value="1" type="hidden" />
+    <div class="live_ico_box">
+        <div class="live_ico_item type_info" id="showInfoBtn"></div>
+        <div class="live_ico_item type_talk" id="showTalkBtn"></div>
+        <div class="live_ico_item type_music" id="musicButton"></div>
+        <div class="live_ico_item type_youdu" id="youduButton"></div>
+        <div class="live_ico_item type_quit" id="hideButton"></div>
+        <input name="live_statu_val" id="live_statu_val" value="0" type="hidden" />
+        <audio src="" style="display:none;" id="live2d_bgm" data-bgm="0" preload="none"></audio>
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input id="duType" value="douqilai,l2d_caihong" type="hidden">
+    </div>
+</div>
+<div id="open_live2d">召唤伊斯特瓦尔</div>
+<script>
+    var message_Path = '/media/live2d/';//资源目录，如果目录不对请更改
+    var talkAPI = "";//如果有类似图灵机器人的聊天接口请填写接口路径
+</script>
+<!--<script src="/media/js/jquery-3.3.1.min.js"></script>-->
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="/media/live2d/js/live2d.js"></script>
+<script type="text/javascript" src="/media/live2d/js/message.js"></script>
+
+</body>
+<script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    $('.comment').bind('DOMNodeInserted',()=>{
+        $('.comment').unbind()
+
+        $('.vbtn').addClass(' mdui-btn mdui-color-theme-accent mdui-ripple')
+    })
+
+    let valine = new Valine({
+        el: '.comment',
+        
+        
+        
+        path: window.location.pathname,
+        pageSize: 30,
+        avatar:'mm',
+        notify:true
+    })
+</script>
+</html>

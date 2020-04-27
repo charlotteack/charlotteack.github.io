@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>charlotteack&#39;s home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+    <link rel="stylesheet" href="/media/css/post.css">
+    <link rel="stylesheet" href="/media/live2d/css/live2d.css" />
+    
+</head>
+<body class=" mdui-appbar-with-toolbar  mdui-theme-primary-pink mdui-theme-accent-pink">
+<header class="mdui-toolbar mdui-color-pink mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide" style="z-index: 1000">
+    <a href="javascript:;" mdui-drawer="{target: '#left-drawer',overlay:true}" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
+    <span class="mdui-typo-title">charlotteack&#39;s home</span>
+    <div class="mdui-toolbar-spacer"></div>
+<!--    <a href="javascript:history.go(0);" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">more_vert</i></a>
+</header>
+
+<div class="mdui-drawer mdui-color-white mdui-drawer-full-height mdui-drawer-close" id="left-drawer">
+    <ul class="mdui-list">
+        <li class="mdui-subheader">菜单</li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/" class="mdui-list-item-content">首页</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/archives" class="mdui-list-item-content">归档</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/tags" class="mdui-list-item-content">标签</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/post/about" class="mdui-list-item-content">关于</a>
+        </li>
+        
+    </ul>
+</div>
+
+<div id="content" class="site-content">
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+            <article id="post-1270" class="post-1270 post type-post status-publish format-standard hentry category-90 category-129 tag-149">
+                <header class="entry-header">
+                    <h1 class="entry-title">安卓广播小练习</h1>
+                    <p class="entry-census">发布于 2020-04-12</p>
+                    <hr>
+                </header>
+                <div class="neko">
+                    <p>最近学习了安卓的服务和广播，这次就来练下手。</p>
+<p>因为现在已经开始准备考研了，题材就选了个简单点的。😌</p>
+<p>需要达到的效果如下：<br>
+短信到来时自动产生的系统广播→激活音乐播放服务程序→活动组件程序使得停止按钮可用。</p>
+<h5 id="参考网址">参考网址：</h5>
+<p><a href="http://www.wustwzx.com/as/sy/sy06.html#mk1">http://www.wustwzx.com/as/sy/sy06.html#mk1</a></p>
+<h5 id="github地址">github地址</h5>
+<p><a href="https://github.com/charlotteack/androidBroadcastTest.git">https://github.com/charlotteack/androidBroadcastTest.git</a></p>
+<h4 id="代码实现如下">代码实现如下:</h4>
+<ul>
+<li>
+<p>布局文件：activity_main.xml<br>
+在主活动里面放一个停止播放流量的按钮即可，比较简单，直接贴代码：</p>
+<pre><code>&lt;Button
+      android:id=&quot;@+id/btnStop&quot;
+      android:layout_width=&quot;wrap_content&quot;
+      android:layout_height=&quot;wrap_content&quot;
+      android:text=&quot;@string/btn_text&quot;
+      app:layout_constraintEnd_toEndOf=&quot;parent&quot;
+      app:layout_constraintHorizontal_bias=&quot;0.498&quot;
+      app:layout_constraintStart_toStartOf=&quot;parent&quot;
+      app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
+</code></pre>
+</li>
+<li>
+<p>音乐服务文件：MyAudioService.java<br>
+这个服务文件需要继承基类Service。由于不需要绑定服务，onBind函数返回空即可。在服务启动时，   获取res下的raw里面的音乐文件并播放；服务停止时，中止播放。逻辑比较简单，代码如下：</p>
+</li>
+</ul>
+<pre><code>public class MyAudioService extends Service {
+  MediaPlayer mediaPlayer;
+
+  public MyAudioService() {
+  }
+
+  @Override
+  public IBinder onBind(Intent intent) {
+      return null;
+  }
+
+  @Override
+  public void onCreate() {
+      mediaPlayer  = MediaPlayer.create(this,R.raw.ruoguodangshi).start();
+  }
+
+  @Override
+  public void onDestroy() {
+      mediaPlayer.stop();
+  }
+}
+</code></pre>
+<ul>
+<li>主界面程序：MainActivity<br>
+这个页面需要做的事情稍微多一点。首先需要写检测短信权限（属于危险权限）及请求申请本权限的代码；其次它需要判断是否有广播到来，若有则把按钮置为可用，并且给按钮绑定点击事件调用音乐服务来关闭音乐的播放。没有广播是按钮的状态应该是不可点击的。同时应该利用onRequestPermissionsResult方法对是否授权以及是否发送了短信给出相应的toast提示。代码如下：</li>
+</ul>
+<pre><code>public class MainActivity extends AppCompatActivity {
+  private Button btnStop;
+  private boolean isCast; //是否为广播激活
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
+          ActivityCompat.requestPermissions(this,new String[]{&quot;android.permission.RECEIVE_SMS&quot;},1);
+      }
+      btnStop=findViewById(R.id.btnStop);
+      Intent intent = getIntent(); //获取广播意图对象
+      isCast = intent.getBooleanExtra(&quot;iscast&quot;, false);  //默认值为false
+      btnStop.setEnabled(isCast);   //设置停止按钮可用和单击监听
+      if(isCast) Toast.makeText(this, &quot;正在播放音乐...&quot;, Toast.LENGTH_SHORT).show();
+      btnStop.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v){
+              //显式服务调用意图（非绑定式）
+              Intent intent=new Intent(MainActivity.this,MyAudioService.class);
+              //在Activity组件里，停止音乐播放服务
+              stopService(intent);
+              finish();  //销毁本活动
+          }
+      });
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      if (requestCode == 1) {
+          if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+              Toast.makeText(this, &quot;未授权，无法实现预定的功能！&quot;, Toast.LENGTH_SHORT).show();
+              finish();
+          } else {
+              Toast.makeText(this, &quot;请发一条短信验证...&quot;, Toast.LENGTH_SHORT).show();
+          }
+      }
+  }
+
+}
+</code></pre>
+<ul>
+<li>广播接受者程序：SmsReceiver.java<br>
+这个类是要继承BroadcastReceiver基类的。还需要在清单文件里配置短信权限和广播接收者组件的意图过滤器，代码如下:</li>
+</ul>
+<pre><code>&lt;receiver
+          android:name=&quot;.SmsReceiver&quot;
+          android:enabled=&quot;true&quot;
+          android:exported=&quot;true&quot;&gt;
+          &lt;intent-filter&gt;
+              &lt;action android:name=&quot;android.provider.Telephony.SMS_RECEIVED&quot;/&gt;
+          &lt;/intent-filter&gt;
+      &lt;/receiver&gt;
+</code></pre>
+<p>此外还需要下面语句来对接收短信进行授权</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.RECEIVE_SMS&quot; /&gt;
+</code></pre>
+<p>然后在广播来临时，调用音乐服务，并且给主活动传递一个intent，告诉主活动广播来了。<br>
+代码如下:</p>
+<pre><code>@Override
+  public void onReceive(Context context, Intent intent) {
+      Intent serviceIntent = new Intent(context, MyAudioService.class);
+      //在广播组件里，通过上下文对象启动音乐播放服务组件
+      context.startService(serviceIntent);
+
+      //新建调用Activity组件的意图
+      Intent activityIntent = new Intent(context, MainActivity.class);
+      activityIntent.putExtra(&quot;isCast&quot;, true);  //携带数据
+      //新建栈用来存放被启动的Activity（当已经存在时，只做移动处理）
+      activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      //在广播组件里，通过上下文对象启动Activity组件
+      context.startActivity(activityIntent);
+  }
+</code></pre>
+<h4 id="运行演示">运行演示</h4>
+<p>第一次启动时，系统会弹出是否允许该app接收短信，这个忘了截屏，就此跳过。<br>
+然后进入到我们的主界面如下：<br>
+<img src="https://charlotteack.github.io/post-images/1586957511663.jpg" alt="" loading="lazy"></p>
+<p>这里同时也会弹出提示发短信的toast，手慢了，，也没截到🤣。总之，，，可以看出此时按钮是不可点击的状态。接着向app发送短信：<br>
+<img src="https://charlotteack.github.io/post-images/1586957939625.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://charlotteack.github.io/post-images/1586957963252.png" alt="" loading="lazy"></figure>
+<p>收到短信后，熟悉的《如果当时》开始播放。按钮也亮了：<br>
+<img src="https://charlotteack.github.io/post-images/1586958006255.png" alt="" loading="lazy"></p>
+<p>点击按钮就会结束播放，按钮再次变为灰色：<br>
+<img src="https://charlotteack.github.io/post-images/1586958039569.png" alt="" loading="lazy"></p>
+<p>okk，本次博客就写到这里啦，欢迎观看~</p>
+
+                </div>
+            </article>
+        </main>
+    </div>
+    <div class="doc-footer-nav mdui-color-theme">
+        <div class="mdui-container">
+            <div class="mdui-row">
+                
+                <div class="mdui-col-xs-2 mdui-col-sm-6 doc-footer-nav-left"></div>
+                
+                
+                <a href="https://charlotteack.github.io/post/feng-fu-fragment-li-mian-de-xian-shi-nei-rong/" class="mdui-ripple mdui-color-theme mdui-col-xs-10 mdui-col-sm-6 doc-footer-nav-right">
+                    <div class="doc-footer-nav-text">
+                        <i class="mdui-icon material-icons">arrow_forward</i>
+                        <span class="doc-footer-nav-direction">下一篇文章</span>
+                        <div class="doc-footer-nav-chapter">丰富fragment里面的显示内容</div>
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <div class="comment"></div>
+</div>
+<footer class="mdui-container footer ">
+    <div class="head_card-offset"></div>
+    <div class="mdui-row mdui-row-gapless">
+        <div class="k-container">
+            <img width="100%" src="/media/img/skirt.png">
+        </div>
+    </div>
+
+    <div class="site-info">
+         <div class="site-info">
+        <div class="footertext"> 
+            <p>Copyright © 2020 - 2021 | <a href="https://huzixu.xyz/">charlotteack</a></p> 
+        </div> 
+        <div class="footer-device"> 
+            <a href="http://www.beian.miit.gov.cn" target="_Blank"> 鄂ICP备20003613号</a> 
+        </div>
+    </div>
+    </div>
+</footer>
+<div id="landlord" style="left:5px;bottom:0px;">
+    <div class="message" style="opacity:0"></div>
+    <canvas id="live2d" width="500" height="560" class="live2d"></canvas>
+    <div class="live_talk_input_body">
+        <div class="live_talk_input_name_body">
+            <input name="name" type="text" class="live_talk_name white_input" id="AIuserName" autocomplete="off" placeholder="你的名字" />
+        </div>
+        <div class="live_talk_input_text_body">
+            <input name="talk" type="text" class="live_talk_talk white_input" id="AIuserText" autocomplete="off" placeholder="要和我聊什么呀？"/>
+            <button type="button" class="live_talk_send_btn" id="talk_send">发送</button>
+        </div>
+    </div>
+    <input name="live_talk" id="live_talk" value="1" type="hidden" />
+    <div class="live_ico_box">
+        <div class="live_ico_item type_info" id="showInfoBtn"></div>
+        <div class="live_ico_item type_talk" id="showTalkBtn"></div>
+        <div class="live_ico_item type_music" id="musicButton"></div>
+        <div class="live_ico_item type_youdu" id="youduButton"></div>
+        <div class="live_ico_item type_quit" id="hideButton"></div>
+        <input name="live_statu_val" id="live_statu_val" value="0" type="hidden" />
+        <audio src="" style="display:none;" id="live2d_bgm" data-bgm="0" preload="none"></audio>
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input id="duType" value="douqilai,l2d_caihong" type="hidden">
+    </div>
+</div>
+<div id="open_live2d">召唤伊斯特瓦尔</div>
+<script>
+    var message_Path = '/media/live2d/';//资源目录，如果目录不对请更改
+    var talkAPI = "";//如果有类似图灵机器人的聊天接口请填写接口路径
+</script>
+<!--<script src="/media/js/jquery-3.3.1.min.js"></script>-->
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="/media/live2d/js/live2d.js"></script>
+<script type="text/javascript" src="/media/live2d/js/message.js"></script>
+
+</body>
+<script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    $('.comment').bind('DOMNodeInserted',()=>{
+        $('.comment').unbind()
+
+        $('.vbtn').addClass(' mdui-btn mdui-color-theme-accent mdui-ripple')
+    })
+
+    let valine = new Valine({
+        el: '.comment',
+        
+        
+        
+        path: window.location.pathname,
+        pageSize: 30,
+        avatar:'mm',
+        notify:true
+    })
+</script>
+</html>

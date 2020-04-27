@@ -1,433 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://charlotteack.github.io</id>
-    <title>charlotteack&apos;s home</title>
-    <updated>2020-04-27T15:18:23.479Z</updated>
-    <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://charlotteack.github.io"/>
-    <link rel="self" href="https://charlotteack.github.io/atom.xml"/>
-    <subtitle>这里是charlotteack的个人空间哦~</subtitle>
-    <logo>https://charlotteack.github.io/images/avatar.png</logo>
-    <icon>https://charlotteack.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, charlotteack&apos;s home</rights>
-    <entry>
-        <title type="html"><![CDATA[安卓广播小练习]]></title>
-        <id>https://charlotteack.github.io/post/an-zhuo-guang-bo-xiao-lian-xi/</id>
-        <link href="https://charlotteack.github.io/post/an-zhuo-guang-bo-xiao-lian-xi/">
-        </link>
-        <updated>2020-04-12T07:27:19.000Z</updated>
-        <content type="html"><![CDATA[<p>最近学习了安卓的服务和广播，这次就来练下手。</p>
-<p>因为现在已经开始准备考研了，题材就选了个简单点的。😌</p>
-<p>需要达到的效果如下：<br>
-短信到来时自动产生的系统广播→激活音乐播放服务程序→活动组件程序使得停止按钮可用。</p>
-<h5 id="参考网址">参考网址：</h5>
-<p><a href="http://www.wustwzx.com/as/sy/sy06.html#mk1">http://www.wustwzx.com/as/sy/sy06.html#mk1</a></p>
-<h5 id="github地址">github地址</h5>
-<p><a href="https://github.com/charlotteack/androidBroadcastTest.git">https://github.com/charlotteack/androidBroadcastTest.git</a></p>
-<h4 id="代码实现如下">代码实现如下:</h4>
-<ul>
-<li>
-<p>布局文件：activity_main.xml<br>
-在主活动里面放一个停止播放流量的按钮即可，比较简单，直接贴代码：</p>
-<pre><code>&lt;Button
-      android:id=&quot;@+id/btnStop&quot;
-      android:layout_width=&quot;wrap_content&quot;
-      android:layout_height=&quot;wrap_content&quot;
-      android:text=&quot;@string/btn_text&quot;
-      app:layout_constraintEnd_toEndOf=&quot;parent&quot;
-      app:layout_constraintHorizontal_bias=&quot;0.498&quot;
-      app:layout_constraintStart_toStartOf=&quot;parent&quot;
-      app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;
-</code></pre>
-</li>
-<li>
-<p>音乐服务文件：MyAudioService.java<br>
-这个服务文件需要继承基类Service。由于不需要绑定服务，onBind函数返回空即可。在服务启动时，   获取res下的raw里面的音乐文件并播放；服务停止时，中止播放。逻辑比较简单，代码如下：</p>
-</li>
-</ul>
-<pre><code>public class MyAudioService extends Service {
-  MediaPlayer mediaPlayer;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>charlotteack&#39;s home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+    <link rel="stylesheet" href="/media/css/post.css">
+    <link rel="stylesheet" href="/media/live2d/css/live2d.css" />
+    
+</head>
+<body class=" mdui-appbar-with-toolbar  mdui-theme-primary-pink mdui-theme-accent-pink">
+<header class="mdui-toolbar mdui-color-pink mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide" style="z-index: 1000">
+    <a href="javascript:;" mdui-drawer="{target: '#left-drawer',overlay:true}" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
+    <span class="mdui-typo-title">charlotteack&#39;s home</span>
+    <div class="mdui-toolbar-spacer"></div>
+<!--    <a href="javascript:history.go(0);" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">more_vert</i></a>
+</header>
 
-  public MyAudioService() {
-  }
+<div class="mdui-drawer mdui-color-white mdui-drawer-full-height mdui-drawer-close" id="left-drawer">
+    <ul class="mdui-list">
+        <li class="mdui-subheader">菜单</li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/" class="mdui-list-item-content">首页</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/archives" class="mdui-list-item-content">归档</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/tags" class="mdui-list-item-content">标签</a>
+        </li>
+        
+        <li class="mdui-list-item mdui-ripple">
+            <a href="/post/about" class="mdui-list-item-content">关于</a>
+        </li>
+        
+    </ul>
+</div>
 
-  @Override
-  public IBinder onBind(Intent intent) {
-      return null;
-  }
-
-  @Override
-  public void onCreate() {
-      mediaPlayer  = MediaPlayer.create(this,R.raw.ruoguodangshi).start();
-  }
-
-  @Override
-  public void onDestroy() {
-      mediaPlayer.stop();
-  }
-}
-</code></pre>
-<ul>
-<li>主界面程序：MainActivity<br>
-这个页面需要做的事情稍微多一点。首先需要写检测短信权限（属于危险权限）及请求申请本权限的代码；其次它需要判断是否有广播到来，若有则把按钮置为可用，并且给按钮绑定点击事件调用音乐服务来关闭音乐的播放。没有广播是按钮的状态应该是不可点击的。同时应该利用onRequestPermissionsResult方法对是否授权以及是否发送了短信给出相应的toast提示。代码如下：</li>
-</ul>
-<pre><code>public class MainActivity extends AppCompatActivity {
-  private Button btnStop;
-  private boolean isCast; //是否为广播激活
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      setContentView(R.layout.activity_main);
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
-          ActivityCompat.requestPermissions(this,new String[]{&quot;android.permission.RECEIVE_SMS&quot;},1);
-      }
-      btnStop=findViewById(R.id.btnStop);
-      Intent intent = getIntent(); //获取广播意图对象
-      isCast = intent.getBooleanExtra(&quot;iscast&quot;, false);  //默认值为false
-      btnStop.setEnabled(isCast);   //设置停止按钮可用和单击监听
-      if(isCast) Toast.makeText(this, &quot;正在播放音乐...&quot;, Toast.LENGTH_SHORT).show();
-      btnStop.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v){
-              //显式服务调用意图（非绑定式）
-              Intent intent=new Intent(MainActivity.this,MyAudioService.class);
-              //在Activity组件里，停止音乐播放服务
-              stopService(intent);
-              finish();  //销毁本活动
-          }
-      });
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-      if (requestCode == 1) {
-          if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-              Toast.makeText(this, &quot;未授权，无法实现预定的功能！&quot;, Toast.LENGTH_SHORT).show();
-              finish();
-          } else {
-              Toast.makeText(this, &quot;请发一条短信验证...&quot;, Toast.LENGTH_SHORT).show();
-          }
-      }
-  }
-
-}
-</code></pre>
-<ul>
-<li>广播接受者程序：SmsReceiver.java<br>
-这个类是要继承BroadcastReceiver基类的。还需要在清单文件里配置短信权限和广播接收者组件的意图过滤器，代码如下:</li>
-</ul>
-<pre><code>&lt;receiver
-          android:name=&quot;.SmsReceiver&quot;
-          android:enabled=&quot;true&quot;
-          android:exported=&quot;true&quot;&gt;
-          &lt;intent-filter&gt;
-              &lt;action android:name=&quot;android.provider.Telephony.SMS_RECEIVED&quot;/&gt;
-          &lt;/intent-filter&gt;
-      &lt;/receiver&gt;
-</code></pre>
-<p>此外还需要下面语句来对接收短信进行授权</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.RECEIVE_SMS&quot; /&gt;
-</code></pre>
-<p>然后在广播来临时，调用音乐服务，并且给主活动传递一个intent，告诉主活动广播来了。<br>
-代码如下:</p>
-<pre><code>@Override
-  public void onReceive(Context context, Intent intent) {
-      Intent serviceIntent = new Intent(context, MyAudioService.class);
-      //在广播组件里，通过上下文对象启动音乐播放服务组件
-      context.startService(serviceIntent);
-
-      //新建调用Activity组件的意图
-      Intent activityIntent = new Intent(context, MainActivity.class);
-      activityIntent.putExtra(&quot;isCast&quot;, true);  //携带数据
-      //新建栈用来存放被启动的Activity（当已经存在时，只做移动处理）
-      activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      //在广播组件里，通过上下文对象启动Activity组件
-      context.startActivity(activityIntent);
-  }
-</code></pre>
-<h4 id="运行演示">运行演示</h4>
-<p>第一次启动时，系统会弹出是否允许该app接收短信，这个忘了截屏，就此跳过。<br>
-然后进入到我们的主界面如下：<br>
-<img src="https://charlotteack.github.io/post-images/1586957511663.jpg" alt="" loading="lazy"></p>
-<p>这里同时也会弹出提示发短信的toast，手慢了，，也没截到🤣。总之，，，可以看出此时按钮是不可点击的状态。接着向app发送短信：<br>
-<img src="https://charlotteack.github.io/post-images/1586957939625.png" alt="" loading="lazy"></p>
-<figure data-type="image" tabindex="1"><img src="https://charlotteack.github.io/post-images/1586957963252.png" alt="" loading="lazy"></figure>
-<p>收到短信后，熟悉的《如果当时》开始播放。按钮也亮了：<br>
-<img src="https://charlotteack.github.io/post-images/1586958006255.png" alt="" loading="lazy"></p>
-<p>点击按钮就会结束播放，按钮再次变为灰色：<br>
-<img src="https://charlotteack.github.io/post-images/1586958039569.png" alt="" loading="lazy"></p>
-<p>okk，本次博客就写到这里啦，欢迎观看~</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[丰富fragment里面的显示内容]]></title>
-        <id>https://charlotteack.github.io/post/feng-fu-fragment-li-mian-de-xian-shi-nei-rong/</id>
-        <link href="https://charlotteack.github.io/post/feng-fu-fragment-li-mian-de-xian-shi-nei-rong/">
-        </link>
-        <updated>2020-03-25T01:58:38.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="前言">前言：</h3>
-<p>继前面实现简单的tabbar切换fragment后，这次就使用RecyclerView来丰富里面address这个tab的内容。另外这次写博客就边做边写，可能会更真实一点。</p>
-<h3 id="整体思路">整体思路：</h3>
-<p>主活动是控制每个tab的切换的，与其显示的内容无关。故这次是与主活动无关的，想要展示出RecyclerView的列表效果，只需修改对应xml里面的内容即可（就我这里来说是address.xml）。之后这个xml会被压缩成fragment，所以还需要在fragment里面将需要展示的数据通过适配器放到RecyclerView。</p>
-<h3 id="实现">实现：</h3>
-<ul>
-<li><strong>修改xml文件展示内容</strong><br>
-这个就先把之前的TextView注释掉，换成RecyclerView即可，比较简单，直接贴代码：</li>
-</ul>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:orientation=&quot;vertical&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:id=&quot;@+id/addr_content&quot;&gt;
-
-
-&lt;!--    &lt;TextView--&gt;
-&lt;!--        android:id=&quot;@+id/addr_content_text&quot;--&gt;
-&lt;!--        android:layout_width=&quot;match_parent&quot;--&gt;
-&lt;!--        android:layout_height=&quot;wrap_content&quot;--&gt;
-&lt;!--        android:text=&quot;@string/address_info&quot;--&gt;
-&lt;!--        android:gravity=&quot;center&quot;--&gt;
-&lt;!--        android:textSize=&quot;24sp&quot;/&gt;--&gt;
-
-
-    &lt;android.support.v7.widget.RecyclerView
-        android:id=&quot;@+id/recycler_view&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot; /&gt;
-&lt;/LinearLayout&gt;
-</code></pre>
-<ul>
-<li><strong>创建RecyclerView展示的行</strong><br>
-这里我想展示名侦探柯南里面的图片和一些文字内容，故创建一个person_item.xml，里面放一个ImageView和一个TextView即可，代码如下：</li>
-</ul>
-<pre><code>   &lt;ImageView
-       android:id=&quot;@+id/person_img&quot;
-       android:layout_width=&quot;wrap_content&quot;
-       android:layout_height=&quot;wrap_content&quot;
-       android:contentDescription=&quot;@string/address_img&quot;
-       android:src=&quot;@drawable/kelan&quot; /&gt;
-
-   &lt;TextView
-       android:id=&quot;@+id/person_description&quot;
-       android:layout_width=&quot;wrap_content&quot;
-       android:layout_height=&quot;wrap_content&quot;
-       android:text=&quot;@string/address_img_info&quot; /&gt;
-
-</code></pre>
-<ul>
-<li><strong>创建person实体类</strong><br>
-因为展示的内容是一张任务图片以及文字，所以创建一个Person实体类来组织这个数据结构比较好。代码如下：</li>
-</ul>
-<pre><code>package com.example.basic_weixin;
-
-public class Person {
-   private int imgID;
-   private String description;
-
-   public Person(int imgID, String description) {
-       this.imgID = imgID;
-       this.description = description;
-   }
-
-   public int getImgID() {
-       return this.imgID;
-   }
-
-   public String getDescription() {
-       return this.description;
-   }
-}
-</code></pre>
-<ul>
-<li><strong>创建Person类的适配器PersonAdapter类</strong><br>
-这种适配器需要继承RecyclerView.Adapter，每个适配器还需要一个ViewHolder内部类，它是决定所展示的形式的（比如我这里是一张图片和一些文字），对应的构造函数就是获取到person_item.xml里面的两个控件即可。光有展示的形式还不行，里面的控件必须还要有对应的内容呀，这里就是要用到onBindViewHolder这个方法了，这个方法可以把Person列表里面的每一个Person里面的内容取出来，然后赋值给每行的控件。至于数据是哪里来的，那当然是PersonAdapter创建的时候，由外面传进来的啦。<br>
-最后还有个getItemCount方法，可以得到列表的数量，但我这里没怎么用到，就不多说了，代码如下：</li>
-</ul>
-<pre><code>package com.example.basic_weixin;
-
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.util.List;
-
-public class PersonAdapter extends RecyclerView.Adapter&lt;PersonAdapter.ViewHolder&gt; {
-    private List&lt;Person&gt; mPersonList;
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView personImg;
-        TextView personDescription;
-        public ViewHolder(View view) {
-            super(view);
-            personImg = view.findViewById(R.id.person_img);
-            personDescription = view.findViewById(R.id.person_description);
-        }
-    }
-
-    public PersonAdapter(List&lt;Person&gt; personList) {
-        this.mPersonList = personList;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.person_item, viewGroup, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Person person = mPersonList.get(i);
-        viewHolder.personImg.setImageResource(person.getImgID());
-        viewHolder.personDescription.setText(person.getDescription());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mPersonList.size();
-    }
-}
-
-</code></pre>
-<ul>
-<li><strong>初始化RecyclerView</strong><br>
-由于展示的内容实在AddressFragment里面，让我们视线来到这里。里面只有一个构造函数和一个创建视图的回调函数。很明显，我们要加的内容是放在这个回调函数里面的。</li>
-</ul>
-<p>在之前里面只是简单的写死的一个TextView的时候，代码是这样的：</p>
-<pre><code>public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-      return  inflater.inflate(R.layout.address, container, false);
-    }
-</code></pre>
-<p>可以说基本没有什么实质性内容，所以在这里我们总体需要做的事情就是创建一个数据源，也就是Person类的列表，然后就是通过适配器把数据放到RecyclerView里面来进行展示即可。</p>
-<p>创建数据列表比较简单，无需多说，直接上代码：</p>
-<pre><code>private void initPerson() {
-        Person kelan1 = new Person(R.drawable.kelan, &quot;柯南1号来了&quot;);
-        Person kelan2 = new Person(R.drawable.kelan2, &quot;柯南2号来了&quot;);
-        Person kelan3 = new Person(R.drawable.kelan3, &quot;柯南1号来了&quot;);
-        Person xiaoai1 = new Person(R.drawable.xiaoai, &quot;小哀1号来了&quot;);
-        Person xiaoai2 = new Person(R.drawable.xiaoai2, &quot;小哀2号来了&quot;);
-        personList.add(kelan1);
-        personList.add(kelan2);
-        personList.add(kelan3);
-        personList.add(xiaoai1);
-        personList.add(xiaoai2);
-    }
-</code></pre>
-<p>然后就需要利用适配器装数据了。按照一般套路，这里首先应该获取到RecyclerView对应的控件，然后设置其布局方式，最后通过适配器把数据传进去即可。但是写着写着发现一个问题，findViewById方法好像不能直接使用！！通过观察发现下面的回调函数里面有一个ViewGroup，于是我就想着多加了一个形参view，让它来调用，代码如下。</p>
-<pre><code>public void initRecyclerView(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        PersonAdapter adapter = new PersonAdapter(personList);
-        recyclerView.setAdapter(adapter);
-    }
-</code></pre>
-<p>到这里可以说已经万事俱备，只欠东风了，最后只需在刚刚说的那个回调函数里面，使用刚刚写的这两个方法即可，问题的关键还是initRecyclerView，不确定是否能将ViewGroup类型的参数传进去，也不知道是不是应该这么传，先试一试吧，代码如下：</p>
-<pre><code>@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        initPerson();
-        initRecyclerView(container);
-        return  inflater.inflate(R.layout.address, container, false);;
-    }
-</code></pre>
-<p>果不其然，运行报错了。通过查看logcat发现是类似空指针的错误。这里我首先想到的是适配器里面的赋值除了问题，于是开始了与适配器的爱恨情仇，折腾一阵子后发现无论是按某些网友的帖子上面的写法，还是按官方的写法都解决不了。这样一来，就多半是这个initRecyclerView(container)传参的问题了。</p>
-<p>说过来说过去还是基础不扎实，安卓底层的一些东西没弄清楚，才会导致这样。后来到网上查阅发现是将整个inflator传进去，修改后的代码如下：</p>
-<pre><code>@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.address, container, false);
-        initPerson();
-        initRecyclerView(view);
-        return view;
-    }
-</code></pre>
-<h3 id="运行结果"><strong>运行结果</strong></h3>
-<p><img src="https://charlotteack.github.io/post-images/1585546333573.jpg" alt="" loading="lazy"><br>
-结果时出来了，但是为什么只有一行？？？<br>
-我以为又是哪里写错了，结果找了半天没发现啥错。。。之后无意中滑动了鼠标，发现：？？？<br>
-<img src="https://charlotteack.github.io/post-images/1585546345188.jpg" alt="" loading="lazy"><br>
-此时心情不知道怎么表达，在此省略🙃</p>
-<p>但这这样也是有问题的，后来度娘告诉我，是因为person_item线性布局文件整体应该是wrap_content的，代码如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
-    android:layout_width=&quot;wrap_content&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:orientation=&quot;vertical&quot;&gt;
-
-    &lt;ImageView
-        android:id=&quot;@+id/person_img&quot;
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:contentDescription=&quot;@string/address_img&quot;
-        android:src=&quot;@drawable/kelan&quot; /&gt;
-
-    &lt;TextView
-        android:id=&quot;@+id/person_description&quot;
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:text=&quot;@string/address_img_info&quot; /&gt;
-&lt;/LinearLayout&gt;
-</code></pre>
-<p>修改后的运行结果：<br>
-<img src="https://charlotteack.github.io/post-images/1585546369754.jpg" alt="" loading="lazy"></p>
-<p>至此，RecyclerView基本的使用已经没啥问题了，下面我尝试下瀑布流的布局。</p>
-<h2 id="瀑布流">瀑布流</h2>
-<p>瀑布流效果也不难，只需在上面的基础上加一点点东西即可。流程如下：</p>
-<ul>
-<li><strong>修改布局方式</strong><br>
-之前初始化recyclerview的时候设置的布局为线性布局，现在需要改成瀑布流，代码如下：</li>
-</ul>
-<pre><code>    public void initRecyclerView(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        PersonAdapter adapter = new PersonAdapter(personList);
-        recyclerView.setAdapter(adapter);
-    }
-</code></pre>
-<p>StaggeredGridLayoutManager里面第一个参数代表瀑布流的列数，第二个是方向。</p>
-<ul>
-<li><strong>添加瀑布效果</strong><br>
-由于图片我刚好找的大小都是一样的，不太好展示出“参差不齐”的美感，所以这里使用一个小技巧，将文字的长度设置成不一样来达到效果，具体方法是生成一个1-10的随机数来表示文字重复的次数，代码如下：</li>
-</ul>
-<pre><code>   //将文字描述长度变成不一样，实现瀑布视觉效果
-    private String getRandomLengthName(String s) {
-        Random random = new Random();
-        int length = random.nextInt(10)+1;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0;i &lt; length; i++) {
-            builder.append(s);
-        }
-        return builder.toString();
-    }
-</code></pre>
-<ul>
-<li>运行结果<br>
-<img src="https://charlotteack.github.io/post-images/1585548456314.jpg" alt="" loading="lazy"><br>
-不过有一说一，瀑布流之后的效果还不错，但主要还是我小哀比较美吧😋</li>
-</ul>
-<p>这次博客就写到这里~</p>
-<p>忘了加github地址了，现在补上</p>
-<h5 id="github地址">github地址</h5>
-<p><a href="https://github.com/charlotteack/Android_tabbar">丰富fragment显示内容</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[使用fragment实现页面切换]]></title>
-        <id>https://charlotteack.github.io/post/shi-yong-fragment-shi-xian-ye-mian-qie-huan/</id>
-        <link href="https://charlotteack.github.io/post/shi-yong-fragment-shi-xian-ye-mian-qie-huan/">
-        </link>
-        <updated>2020-03-15T14:28:28.000Z</updated>
-        <content type="html"><![CDATA[<h5 id="github地址">github地址</h5>
+<div id="content" class="site-content">
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+            <article id="post-1270" class="post-1270 post type-post status-publish format-standard hentry category-90 category-129 tag-149">
+                <header class="entry-header">
+                    <h1 class="entry-title">使用fragment实现页面切换</h1>
+                    <p class="entry-census">发布于 2020-03-15</p>
+                    <hr>
+                </header>
+                <div class="neko">
+                    <h5 id="github地址">github地址</h5>
 <p><a href="https://github.com/charlotteack/Android_tabbar">简单的tabbar页面切换</a></p>
 <h3 id="实现的效果如图这里只展示两个页面其他的一样">实现的效果如图（这里只展示两个页面，其他的一样）</h3>
 <p><img src="data:image/png;base64,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/oYoA/pHooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/ACTXxZ/2CLv/ANEvX87vhf8A5GbSf+vuH/0MV/RF8Tv+Sa+LP+wRd/8Aol6/nd8L/wDIy6T/ANfcP/oYoA/pHooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/JNfFn/YIu//AES9fzv+FV/4qbScj/l7h/8AQxX9EHxO/wCSbeLP+wTd/wDol6/ni8L/APIy6T/19w/+higD+kKiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA5r4nf8AJNvFn/YJu/8A0S9fzxeF/wDkZdJ/6+4f/QxX9DvxO/5Jt4s/7BN3/wCiXr+eLwv/AMjLpP8A19w/+higD+kKiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA5r4nf8k28Wf9gm7/8ARL1/PF4X/wCRl0n/AK+4f/QxX9DvxO/5Jt4s/wCwTd/+iXr+eLwv/wAjLpP/AF9w/wDoYoA/pCooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/JNvFn/AGCbv/0S9fzxeF/+Rm0n/r7h/wDQxX9DvxO/5Jt4s/7BN3/6Jev54vC//Iy6T/19w/8AoYoA/pCooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/JNvFn/YJu/wD0S9fzxeF/+Rl0n/r8h/8AQxX9DvxO/wCSbeLP+wTd/wDol6/ni8L/APIy6T/19w/+higD+kKiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA5r4nf8AJNvFn/YJu/8A0S9fzxeF/wDkZdJ/6+4f/QxX9DvxO/5Jt4s/7BN3/wCiXr+eLwv/AMjLpP8A19w/+higD+kKiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA5r4nf8k28Wf9gm7/8ARL1/PF4X/wCRl0n/AK+4f/QxX9DvxO/5Jt4s/wCwTd/+iXr+eLwv/wAjLpP/AF9w/wDoYoA/pCooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/JNvFn/AGCbv/0S9fzxeF/+Rl0n/r7h/wDQxX9DvxO/5Jt4s/7BN3/6Jev54vC//IzaT/19w/8AoYoA/pCooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOa+J3/JNvFn/YJu/wD0S9fzx+F/+Rm0j/r7h/8AQxX9DnxO/wCSbeLP+wTd/wDol6/nk8Lf8jJpH/X3D/6GKAP6QKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigDmvid/wAk28Wf9gm7/wDRL1/PJ4W/5GTSP+vuH/0MV/Q38Tv+SbeLP+wTd/8Aol6/nl8L/wDIy6T/ANfcP/oYoA/o/ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAC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" alt="avatar" loading="lazy"><br>
@@ -640,26 +268,113 @@ public class PersonAdapter extends RecyclerView.Adapter&lt;PersonAdapter.ViewHol
 </code></pre>
 <p><strong>注意</strong>点击时还需要将所有的图片和文字恢复正常。</p>
 <p>这次博客就写到这里吧，第一次写也不知道写些啥，整个过程就像是摸石头过河，哈哈哈哈哈嗝，就酱吧。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[测试2]]></title>
-        <id>https://charlotteack.github.io/post/ce-shi-2/</id>
-        <link href="https://charlotteack.github.io/post/ce-shi-2/">
-        </link>
-        <updated>2020-03-13T15:20:51.000Z</updated>
-        <content type="html"><![CDATA[<p>测试一下排版问题</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[测试]]></title>
-        <id>https://charlotteack.github.io/post/ce-shi/</id>
-        <link href="https://charlotteack.github.io/post/ce-shi/">
-        </link>
-        <updated>2020-03-13T15:15:39.000Z</updated>
-        <content type="html"><![CDATA[<p>这里发一篇<strong>测试</strong>博客<br>
-以后可能会在这里记录自己学习<em>Vue</em> 、<em>Java</em> 、<em>Flutter</em> 的点点滴滴<br>
-就这样🙃</p>
-]]></content>
-    </entry>
-</feed>
+
+                </div>
+            </article>
+        </main>
+    </div>
+    <div class="doc-footer-nav mdui-color-theme">
+        <div class="mdui-container">
+            <div class="mdui-row">
+                
+                <a href="https://charlotteack.github.io/post/feng-fu-fragment-li-mian-de-xian-shi-nei-rong/" class="mdui-ripple mdui-color-theme mdui-col-xs-2 mdui-col-sm-6 doc-footer-nav-left">
+                    <div class="doc-footer-nav-text">
+                        <i class="mdui-icon material-icons">arrow_back</i>
+                        <span class="doc-footer-nav-direction mdui-hidden-xs-down">上一篇文章</span>
+                        <div class="doc-footer-nav-chapter mdui-hidden-xs-down">丰富fragment里面的显示内容</div>
+                    </div>
+                </a>
+                
+                
+                <a href="https://charlotteack.github.io/post/ce-shi-2/" class="mdui-ripple mdui-color-theme mdui-col-xs-10 mdui-col-sm-6 doc-footer-nav-right">
+                    <div class="doc-footer-nav-text">
+                        <i class="mdui-icon material-icons">arrow_forward</i>
+                        <span class="doc-footer-nav-direction">下一篇文章</span>
+                        <div class="doc-footer-nav-chapter">测试2</div>
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <div class="comment"></div>
+</div>
+<footer class="mdui-container footer ">
+    <div class="head_card-offset"></div>
+    <div class="mdui-row mdui-row-gapless">
+        <div class="k-container">
+            <img width="100%" src="/media/img/skirt.png">
+        </div>
+    </div>
+
+    <div class="site-info">
+         <div class="site-info">
+        <div class="footertext"> 
+            <p>Copyright © 2020 - 2021 | <a href="https://huzixu.xyz/">charlotteack</a></p> 
+        </div> 
+        <div class="footer-device"> 
+            <a href="http://www.beian.miit.gov.cn" target="_Blank"> 鄂ICP备20003613号</a> 
+        </div>
+    </div>
+    </div>
+</footer>
+<div id="landlord" style="left:5px;bottom:0px;">
+    <div class="message" style="opacity:0"></div>
+    <canvas id="live2d" width="500" height="560" class="live2d"></canvas>
+    <div class="live_talk_input_body">
+        <div class="live_talk_input_name_body">
+            <input name="name" type="text" class="live_talk_name white_input" id="AIuserName" autocomplete="off" placeholder="你的名字" />
+        </div>
+        <div class="live_talk_input_text_body">
+            <input name="talk" type="text" class="live_talk_talk white_input" id="AIuserText" autocomplete="off" placeholder="要和我聊什么呀？"/>
+            <button type="button" class="live_talk_send_btn" id="talk_send">发送</button>
+        </div>
+    </div>
+    <input name="live_talk" id="live_talk" value="1" type="hidden" />
+    <div class="live_ico_box">
+        <div class="live_ico_item type_info" id="showInfoBtn"></div>
+        <div class="live_ico_item type_talk" id="showTalkBtn"></div>
+        <div class="live_ico_item type_music" id="musicButton"></div>
+        <div class="live_ico_item type_youdu" id="youduButton"></div>
+        <div class="live_ico_item type_quit" id="hideButton"></div>
+        <input name="live_statu_val" id="live_statu_val" value="0" type="hidden" />
+        <audio src="" style="display:none;" id="live2d_bgm" data-bgm="0" preload="none"></audio>
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input name="live2dBGM" value="https://img.apa70.com/123.mp3" type="hidden">
+        <input id="duType" value="douqilai,l2d_caihong" type="hidden">
+    </div>
+</div>
+<div id="open_live2d">召唤伊斯特瓦尔</div>
+<script>
+    var message_Path = '/media/live2d/';//资源目录，如果目录不对请更改
+    var talkAPI = "";//如果有类似图灵机器人的聊天接口请填写接口路径
+</script>
+<!--<script src="/media/js/jquery-3.3.1.min.js"></script>-->
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="/media/live2d/js/live2d.js"></script>
+<script type="text/javascript" src="/media/live2d/js/message.js"></script>
+
+</body>
+<script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    $('.comment').bind('DOMNodeInserted',()=>{
+        $('.comment').unbind()
+
+        $('.vbtn').addClass(' mdui-btn mdui-color-theme-accent mdui-ripple')
+    })
+
+    let valine = new Valine({
+        el: '.comment',
+        
+        
+        
+        path: window.location.pathname,
+        pageSize: 30,
+        avatar:'mm',
+        notify:true
+    })
+</script>
+</html>
